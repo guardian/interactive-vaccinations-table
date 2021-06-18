@@ -1,0 +1,186 @@
+h4 {
+    @include fs-bodyHeading(4);
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.gv-subhead {
+    @include fs-textSans(2);
+    max-width: 80%;
+}
+
+.gv-source {
+    @include fs-textSans(2);
+}
+
+.gv-wrapper {
+    background-color: white;
+    border-top: 1px solid $gu-grey-3;
+}
+
+.gv-table {
+    display: table;
+}
+
+.gv-row {
+    display: table-row;
+}
+
+.gv-cell {
+    display: table-cell;
+}
+
+.gv-table-header {
+    display: table-row;
+    border-bottom: 1px solid $gu-grey-1;
+    background-color: $gu-grey-4;
+}
+
+.gv-table-column-title {
+    display: table-cell;
+    position: relative;
+}
+
+.gv-sparkline {
+    // background-color: red;
+    height: 1em;
+    width: 40px;
+}
+
+#gv-country-search {
+    height: 36px;
+    border: 1px solid #dfdfdf;
+    border-radius: 24px;
+    padding: 4px 12px;
+    width: 100%;
+    font-size: 14px;
+    margin-bottom: 18px;
+    color: #767676;
+    max-width: 620px;
+    box-sizing: border-box;
+}
+
+.gv-table {
+    width: 100%;
+    border-top: 2px solid $gu-grey-3;
+    // max-height: 150px;
+    .gv-cell,
+    .gv-table-column-title {
+        text-align: right;
+        vertical-align: top;
+        padding: 6px 10px 6px 3px;
+        border-right: 1px solid white;
+        @include fs-textSans(1);
+        font-size: 12px;
+        @include mq(tablet) {
+            font-family: "Guardian Text Egyptian Web";
+            font-size: 12px;
+            line-height: 16px;
+        }
+        color: #676767;
+        //    border-bottom: 1px dotted #f1f1f1;
+    }
+    .gv-row:nth-child(odd) {
+        background-color: #f6f6f6;
+    }
+    .gv-country-name {
+        text-align: left !important;
+    }
+    .gv-table-column-title {
+        color: black;
+        font-weight: 700;
+    }
+}
+
+.gv-number-cell {
+    text-align: right;
+    font-size: 11px !important;
+}
+
+.gv-subhead {
+    @include fs-bodyCopy(3);
+}
+
+.gv-table-heading {
+    @include fs-bodyHeading(4);
+}
+
+.gv-show-all {
+    display: inline-flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: center;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-family: GuardianTextSans, "Guardian Text Sans Web", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.5;
+    font-weight: 700;
+    height: 44px;
+    min-height: 44px;
+    color: rgb(255, 255, 255);
+    flex-direction: row-reverse;
+    border-width: initial;
+    border-style: none;
+    border-color: initial;
+    border-image: initial;
+    background: rgb(5, 41, 98);
+    transition: all 0.3s ease-in-out 0s;
+    text-decoration: none;
+    padding: 0px 22px;
+    border-radius: 22px;
+}
+
+.gv-clicked {
+    //display: none;
+}
+
+.gv-toggle-wrapper {
+    display: block;
+    position: absolute;
+    pointer-events: none;
+    top: 5px;
+    right: 10px;
+}
+
+.gv-toggle-wrapper::before {
+    content: ' ';
+    display: block;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #121212;
+    position: absolute;
+    right: 0;
+    top: 10px;
+    opacity: .3;
+}
+
+.gv-toggle-wrapper::after {
+    content: ' ';
+    display: block;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 5px solid #121212;
+    position: absolute;
+    top: 2px;
+    right: 0;
+    opacity: .3;
+}
+
+.gv-table-title-span {
+    width: 80%;
+    float: left;
+    text-align: left;
+}
+
+.gv-rate-explainer {
+    @include fs-textSans(3);
+    font-weight: 500;
+    margin-bottom: 12px;
+    margin-left: 2px;
+}
