@@ -1,33 +1,38 @@
-//import makeTable from 'shared/js/maketable.js'
-import data from 'assets/vaccinations.json'
+
 import {numberWithCommas} from 'shared/js/util.js'
+import axios from 'axios'
+import csvParse from "csv-parse/lib/es5/sync";
+
+const allArr = []
+
+axios.get("https://interactive.guim.co.uk/2021/jan/vaccinations/vaccinations.csv").then(data => {
+
+	let vaccinations = csvParse(data.data.toString(),{columns: true});
+
+	const countryNames = [... new Set(vaccinations.map(d => d.location))]
+
+
+	let obj = countryNames.map(country => {
+
+		let countryData = vaccinations.filter(f => f.location === country)
+
+		if(countryData[countryData.length-1].iso_code.length === 3) allArr.push(countryData[countryData.length-1])
+	})
+
+	drawtable(allArr, "total_vaccinations_per_hundred", true);
+
+})
 
 
 
 var tablediv = document.querySelector(".gv-table#gv-cases");
 var searchBoxUsed = false;
-var parent = window.parent;
+
 const columnHeadings = [
 "Country", "Latest daily vaccinations", "Total vaccinations", "Total vaccinations per hundred people"
 ]
 
-function ophan(component, value) {
-	console.log('not tracking')
-        //   var trackingobject = {
-        //     component,
-        //     value }
-
-    // if (parent.guardian.ophan && parent.guardian.ophan != undefined) {
-
-    //   parent.guardian.ophan.record(trackingobject);
-    //   console.log(`sent ${component} ${value} to ophan`)
-    // } else {console.log("can't find ophan")}
-}
-
-
-
-
-var areas = data;
+var areas = allArr;
 
 function drawtable(areas, sortkey, truncate) {
 
@@ -50,19 +55,20 @@ function drawtable(areas, sortkey, truncate) {
 	headerrow.innerHTML =
 	`
 	<div class="gv-table-column-title gv-sortable" id="gv-countries-header">
-	<span class="gv-table-title-span">${columnHeadings[0]}</span>
-	<div class="gv-toggle-wrapper"></div>
+		<span class="gv-table-title-span">${columnHeadings[0]}</span>
+		<div class="gv-toggle-wrapper"></div>
 	</div>
 	<div class="gv-table-column-title" id="gv-daily-header">
-	<span class="gv-table-title-span">${columnHeadings[1]}<span>
-	<div class="gv-toggle-wrapper"></div>
-	</div><div class="gv-table-column-title" id="total-vaccinations-header">
-	<span class="gv-table-title-span">${columnHeadings[2]}</span>
-	<div class="gv-toggle-wrapper"></div>
+		<span class="gv-table-title-span">${columnHeadings[1]}<span>
+		<div class="gv-toggle-wrapper"></div>
 	</div>
-	<div class="gv-table-column-title" id="otal-hundred-header">
-	<span class="gv-table-title-span">${columnHeadings[3]}</span>
-	<div class="gv-toggle-wrapper"></div>
+	<div class="gv-table-column-title" id="total-vaccinations-header">
+		<span class="gv-table-title-span">${columnHeadings[2]}</span>
+		<div class="gv-toggle-wrapper"></div>
+	</div>
+	<div class="gv-table-column-title" id="total-hundred-header">
+		<span class="gv-table-title-span">${columnHeadings[3]}</span>
+		<div class="gv-toggle-wrapper"></div>
 	</div>`;
 
 	tablediv.appendChild(headerrow);
@@ -105,23 +111,28 @@ function drawtable(areas, sortkey, truncate) {
 	var fortnightheader = document.querySelector("#gv-daily-header");
 	fortnightheader.addEventListener("click", e => {
 
-		drawtable(data, "daily_vaccinations", true);
+		drawtable(allArr, "daily_vaccinations", true);
 	});
 
 	var totaldeathsheader = document.querySelector("#total-vaccinations-header");
 	totaldeathsheader.addEventListener("click", e => {
 
-		drawtable(data, "total_vaccinations", true);
+		drawtable(allArr, "total_vaccinations", true);
 	});
 
-	var fortnightdeathsheader = document.querySelector("#otal-hundred-header");
+	var fortnightdeathsheader = document.querySelector("#total-hundred-header");
 	fortnightdeathsheader.addEventListener("click", e => {
 
-		drawtable(data, "total_vaccinations_per_hundred", true);
+		drawtable(allArr, "total_vaccinations_per_hundred", true);
 	});
+
+
+	if (window.resize) {
+		window.resize();
+	}
 }
 
-drawtable(data, "total_vaccinations_per_hundred", true);
+
 
 var searchbox = document.querySelector("#gv-country-search");
 
@@ -133,7 +144,7 @@ searchbox.addEventListener("input", e => {
 	}
 	if (e.target.value.length > 2) {
 
-		var shortlist = data.filter(r =>
+		var shortlist = allArr.filter(r =>
 
 			r.location.toLowerCase().includes(e.target.value.toLowerCase())
 			);
@@ -142,12 +153,12 @@ searchbox.addEventListener("input", e => {
 
 	} else if (e.target.value.length == 0) {
 
-		drawtable(data, "total_vaccinations_per_hundred");
+		drawtable(allArr, "total_vaccinations_per_hundred");
 	}
 });
 
 searchbox.addEventListener("blur", e => {
-	//drawtable(data, "total_vaccinations_per_hundred");
+	//drawtable(allArr, "total_vaccinations_per_hundred");
 });
 
 searchbox.addEventListener("focus", e => {
@@ -161,7 +172,7 @@ showall.addEventListener("click", e => {
 	showall.classList.add("gv-clicked")
 
 
-	showall.innerHTML == 'Show all' ? drawtable(data, null, false) : drawtable(data, null, true);
+	showall.innerHTML == 'Show all' ? drawtable(allArr, null, false) : drawtable(allArr, null, true);
 	showall.innerHTML == 'Show all' ? showall.innerHTML = 'Show less' : showall.innerHTML = 'Show all';
 
 
@@ -169,11 +180,4 @@ showall.addEventListener("click", e => {
 
 
 
-if (window.resize) {
-	window.resize();
-}
 
-
-
-/*Country	Latest daily vaccinations	Total vaccinations	Total vaccinations per hundred people
-(ordered by total_vaccinations_per_hundred)	Latest figure for daily_vaccinations	Latest figure for total_vaccinations	Latest figure for total_vaccinations_per_hundred*/
